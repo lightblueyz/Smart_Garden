@@ -113,7 +113,7 @@ export function Profile() {
                       <strong>País:</strong> {customer.country}
                     </h1>
                   </div>
-                </div>
+                           </div>
 
                 <div className="py-2"></div>
                 <div className="h-auto w-auto px-4  flex-col">

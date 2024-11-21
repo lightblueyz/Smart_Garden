@@ -3,13 +3,17 @@ import { ListCustomersService } from "../services/listCustomersService";
 
 class ListCustomersController {
     async handle(request: FastifyRequest, reply: FastifyReply) {
-        const listCustomersService = new ListCustomersService
-
-        const customers = await listCustomersService.execute();
-
-        reply.send(customers);
+        try {
+            const listCustomersService = new ListCustomersService();
+            const customers = await listCustomersService.execute();
+            return reply.send(customers);
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                return reply.status(500).send({ error: error.message });
+            }
+            return reply.status(500).send({ error: "Erro desconhecido ao listar os clientes" });
+        }
     }
 }
 
-
-export { ListCustomersController }
+export { ListCustomersController };

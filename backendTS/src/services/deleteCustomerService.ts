@@ -1,35 +1,27 @@
 import prismaClient from "../prisma";
 
-interface DeleteCustomerProps {
-    id: string;
-
-}
-
 class DeleteCustomerService {
-    async execute({ id }: DeleteCustomerProps) {
-        if (!id) {
-            throw new Error("invalid solicitation!")
+    async execute(userId: number) {
+        if (!userId) {
+            throw new Error("Invalid token or user ID missing!");
         }
 
-        const findCustomer = await prismaClient.customer.findFirst({
-            where: {
-                id: id
-            }
-        })
+        
+        const findCustomer = await prismaClient.customer.findUnique({
+            where: { id: userId },
+        });
 
         if (!findCustomer) {
-            throw new Error("Cliente não existe ou digitado de forma incorreta!")
+            throw new Error("User does not exist!");
         }
 
+        // Deleta o usuário
         await prismaClient.customer.delete({
-            where: {
-                id: findCustomer.id
-            }
-        })
+            where: { id: userId },
+        });
 
-        return { message: "Cliente deletado com sucesso!" }
-
+        return { message: "Account successfully deleted!" };
     }
 }
 
-export { DeleteCustomerService }
+export { DeleteCustomerService };
