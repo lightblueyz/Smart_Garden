@@ -1,40 +1,36 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { SingIn } from "./signin_area";
+import { SignIn } from "./signin_area";
 import { Register } from "./register_area";
 import { HomeData } from "./home_data";
-import { Home } from "./home/home";
+//import { Home } from "./home/home";
 import { AboutUs } from "./about_us";
 import { Profile } from "./profile";
 import { Stats } from "./stats";
 
 const router = createBrowserRouter([
   {
-    path: "/home/home",
-    element: <Home />,
-  },
-  {
     path: "/signin/",
-    element: <SingIn />,
+    element: <SignIn />,
   },
   {
     path: "/signup/",
     element: <Register />,
   },
   {
-    path: "/home/",
+    path: "/home/:id",
     element: <HomeData />,
+  },
+  {
+    path: "/profile/:id",
+    element: <Profile />,
+  },
+  {
+    path: "/stats/:id",
+    element: <Stats />,
   },
   {
     path: "/aboutus/",
     element: <AboutUs />,
-  },
-  {
-    path: "/profile/",
-    element: <Profile />,
-  },
-  {
-    path: "/stats",
-    element: <Stats />,
   },
 ]);
 

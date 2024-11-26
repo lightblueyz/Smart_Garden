@@ -1,13 +1,14 @@
 import { AlignJustify, ChartNoAxesCombined, CircleUserRound } from "lucide-react";
 import { FormEvent } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 export function Stats() {
+  const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
-  function goToProfile(event: FormEvent<HTMLFormElement>) {
+  function goToProfile(event: FormEvent<HTMLDivElement>) {
     event.preventDefault();
-    navigate("/profile");
+    navigate(`/profile${id}`);
   }
 
   return (
@@ -32,9 +33,7 @@ export function Stats() {
         <h1 className="text-lg md:text-xl">
           <strong>HISTÓRICO DE MEDIÇÕES:</strong>
         </h1>
-        <h1 className="text-base md:text-lg">
-          ÚLTIMOS 20 MONITORAMENTOS
-        </h1>
+        <h1 className="text-base md:text-lg">ÚLTIMOS 20 MONITORAMENTOS</h1>
       </div>
     </div>
   );

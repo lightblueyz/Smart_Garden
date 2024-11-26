@@ -1,6 +1,15 @@
-import { AlignJustify, CircleUserRound, Sun, RefreshCcw, Droplet, Clock, ChartAreaIcon, ChartNoAxesCombined, CircleAlert } from "lucide-react";
-import { FormEvent, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import {
+  AlignJustify,
+  CircleUserRound,
+  Sun,
+  RefreshCcw,
+  Droplet,
+  Clock,
+  ChartNoAxesCombined,
+} from "lucide-react";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import axios from "axios";
 
 interface WeatherResponse {
   name: string;
@@ -13,9 +22,9 @@ interface WeatherResponse {
 }
 
 export function HomeData() {
-  const [search, setSearch] = useState("");
+  const { id } = useParams<{ id: string }>(); 
   const [weather, setWeather] = useState<WeatherResponse | null>(null);
-  const [showRefresh, setShowRefresh] = useState(false); 
+  const [showRefresh, setShowRefresh] = useState(false);
   const navigate = useNavigate();
 
   const apiTeste = {
@@ -41,16 +50,6 @@ export function HomeData() {
     squall: "rajada",
   };
 
-  function goToProfile(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    navigate("/profile");
-  }
-
-  function goToStats(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    navigate("/stats");
-  }
-
   function fetchWeather(city: string) {
     fetch(
       `${apiTeste.base}weather?q=${city}&units=metric&APPID=${apiTeste.key}`
@@ -63,7 +62,6 @@ export function HomeData() {
       })
       .then((result) => {
         setWeather(result);
-        localStorage.setItem("selectedCity", city);
       })
       .catch((error) => {
         console.error("There was a problem with the fetch operation:", error);
@@ -71,16 +69,15 @@ export function HomeData() {
   }
 
   useEffect(() => {
-    const storedCity = localStorage.getItem("selectedCity");
-    if (storedCity) {
-      setSearch(storedCity);
-      fetchWeather(storedCity);
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
+    if (user && user.city) {
+      fetchWeather(user.city); // Busca o clima para a cidade do usuário logado
     }
   }, []);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setShowRefresh(true); 
+      setShowRefresh(true);
     }, 90000);
 
     return () => clearInterval(interval);
@@ -92,7 +89,7 @@ export function HomeData() {
         <div>
           <AlignJustify className="size-10" />
         </div>
-        <div onClick={goToProfile}>
+        <div onClick={() => navigate(`/profile/${id}`)}>
           <CircleUserRound className="size-12" />
         </div>
       </div>
@@ -115,16 +112,15 @@ export function HomeData() {
                 : "Temperatura não disponível"}
               <br />
               {weather && weather.weather.length > 0
-                ? weatherConditionsTranslation[
-                    weather.weather[0].description
-                  ] || "Condição não disponível"
+                ? weatherConditionsTranslation[weather.weather[0].description] ||
+                  "Condição não disponível"
                 : "Condição não disponível"}
             </h1>
             <Sun className="size-10 px" />
             {showRefresh && (
               <button
                 onClick={() => {
-                  fetchWeather(search);
+                  fetchWeather("cidade");
                   setShowRefresh(false);
                 }}
                 className="ml-2"
@@ -141,7 +137,6 @@ export function HomeData() {
         <strong>MONITORAMENTOS ATIVOS</strong>
       </p>
 
-     
       <div className="flex flex-wrap justify-center gap-6 sm:gap-8 md:gap-12 lg:gap-16 xl:gap-20 py-10 text-zinc-100">
         <div className="h-52 w-64 bg-zinc-700 px-6 rounded-xl flex-col">
           <div className="flex py-4 gap-2">
@@ -153,23 +148,17 @@ export function HomeData() {
               <strong>22° C</strong>
             </h1>
           </div>
-          <div className="flex items-center justify-center font-poppins py-6">
-            <h1>Ideal: 15°C a 25°C</h1>
-          </div>
         </div>
 
         <div className="h-52 w-64 bg-zinc-700 px-6 rounded-xl flex-col">
           <div className="flex py-4 gap-2">
             <Droplet className="size-5" />
-            <h1 className="font-rubik-mono text-center text-lg">Humidade</h1>
+            <h1 className="font-rubik-mono text-center text-lg">Umidade</h1>
           </div>
           <div className="flex items-center justify-center font-poppins text-xl py-8">
             <h1>
               <strong>22%</strong>
             </h1>
-          </div>
-          <div className="flex items-center justify-center font-poppins py-6">
-            <h1>Ideal: 20% a 40%</h1>
           </div>
         </div>
 
@@ -183,18 +172,19 @@ export function HomeData() {
               <strong>20 dias</strong>
             </h1>
           </div>
-          <div className="flex items-center justify-center font-poppins py-6">
-            <h1>Ideal: 70 a 80</h1>
+        </div>
+
+        <div className="h-52 w-64 bg-zinc-700 px-6 rounded-xl flex-col">
+          <div className="flex py-4 gap-2">
+            <Clock className="size-5" />
+            <h1 className="font-rubik-mono text-center text-lg">Luminosidade</h1>
+          </div>
+          <div className="flex items-center justify-center font-poppins text-xl py-8">
+            <h1>
+              <strong>23%</strong>
+            </h1>
           </div>
         </div>
-      </div>
-
-      <div className="py-2"></div>
-      <div onClick={goToStats} className="flex px-40 gap-1">
-      <ChartNoAxesCombined className="size-10 " />
-      <p className="py-4">
-      Estastísticas
-      </p>
       </div>
     </div>
   );

@@ -1,4 +1,4 @@
-export function Home() {
+export function Lobby() {
     return (
         <div className="h-screen bg-pattern bg-no-repeat bg-center py-5">
 
