@@ -8,7 +8,11 @@
     "skipLibCheck": true,
     "resolveJsonModule": true,
     "strict": true,
-    "types": ["fastify"], 
-    "noErrorTruncation": true
+    "types": ["fastify"],
+    "noErrorTruncation": true,
+    "baseUrl": "./",  // Defina a baseUrl como raiz
+    "paths": {
+      "*": ["node_modules/*", "src/*"]  // Ajuste o caminho para o diretório src
+    }
   }
 }

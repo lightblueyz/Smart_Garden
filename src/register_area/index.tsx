@@ -4,6 +4,8 @@ import { api } from "../services/api";
 
 export function Register() {
   const [search, setSearch] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const navigate = useNavigate();
 
   const apiTeste = {
@@ -15,11 +17,9 @@ export function Register() {
     navigate("/signin");
   }
 
-
   const usernameRef = useRef<HTMLInputElement | null>(null);
   const nameRef = useRef<HTMLInputElement | null>(null);
   const emailRef = useRef<HTMLInputElement | null>(null);
-  const passRef = useRef<HTMLInputElement | null>(null);
   const phonRef = useRef<HTMLInputElement | null>(null);
   const cityRef = useRef<HTMLInputElement | null>(null);
   const stateRef = useRef<HTMLInputElement | null>(null);
@@ -29,26 +29,37 @@ export function Register() {
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-   
+    // Validação de senha
+    if (password.length < 6) {
+      alert("A senha deve ter pelo menos 6 caracteres.");
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      alert("As senhas não coincidem.");
+      return;
+    }
+
     if (
       !usernameRef.current?.value ||
       !nameRef.current?.value ||
       !emailRef.current?.value ||
-      !passRef.current?.value ||
       !phonRef.current?.value ||
       !cityRef.current?.value ||
       !stateRef.current?.value ||
       !contRef.current?.value ||
       !cepRef.current?.value
-    )
+    ) {
+      alert("Preencha todos os campos!");
       return;
+    }
 
     try {
       const response = await api.post("/customer", {
         username: usernameRef.current?.value,
         name: nameRef.current?.value,
         email: emailRef.current?.value,
-        password: passRef.current?.value,
+        password,
         phone: phonRef.current?.value,
         city: cityRef.current?.value,
         state: stateRef.current?.value,
@@ -65,7 +76,7 @@ export function Register() {
             console.log(result);
           });
 
-        navigate("/home");
+        navigate("/signin");
       }
     } catch (error: unknown) {
       if (error instanceof Error) {
@@ -182,32 +193,33 @@ export function Register() {
           </div>
         </div>
         <div className="text-sm">
-          <p>
-            <strong>SENHA</strong>
-          </p>
-          <div className="h-7 border-2 border-black px-4 rounded-full flex items-center gap-3 w-full">
-            <input
-              required
-              type="password"
-              className="bg-transparent text-base placeholder-zinc-400 outline-none flex-1"
-              ref={passRef}
-            />
-          </div>
-        </div>
-        <div className="text-sm">
-          <p>
-            <strong>CONFIRME SUA SENHA</strong>
-          </p>
-          <div className="h-7 border-2 border-black px-4 rounded-full flex items-center gap-3 w-full">
-            <input
-              required
-              type="password"
-              onChange={(e) => setSearch(e.target.value)}
-              className="bg-transparent text-base placeholder-zinc-400 outline-none flex-1"
-              ref={stateRef}
-            />
-          </div>
-        </div>
+              <p>
+                <strong>SENHA</strong>
+              </p>
+              <div className="h-7 border-2 border-black px-4 rounded-full flex items-center gap-3 w-full">
+                <input
+                  required
+                  type="password"
+                  className="bg-transparent text-base placeholder-zinc-400 outline-none flex-1"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </div>
+            </div>
+            <div className="text-sm">
+              <p>
+                <strong>CONFIRME SUA SENHA</strong>
+              </p>
+              <div className="h-7 border-2 border-black px-4 rounded-full flex items-center gap-3 w-full">
+                <input
+                  required
+                  type="password"
+                  className="bg-transparent text-base placeholder-zinc-400 outline-none flex-1"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                />
+              </div>
+            </div>
         <div className="text-sm">
           <p>
             <strong>ESTADO</strong>

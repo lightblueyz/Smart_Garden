@@ -45,6 +45,7 @@ export function SignIn() {
 
   return (
     <form onSubmit={handleSubmit}>
+      <div className="py-8"></div>
       <div className="flex justify-center items-center flex-col gap-3">
         <div className="py-14">
           <img
@@ -53,7 +54,8 @@ export function SignIn() {
             className="max-w-[375px] h-auto object-contain"
           />
         </div>
-        <div className="flex text-xl w-1/3 px-4">
+        <div className="py-5"></div>
+        <div className="flex text-xl w-1/3 px-4 ">
           <p className="w-full">
             <strong>Usuário</strong>
           </p>
@@ -96,9 +98,12 @@ export function SignIn() {
         >
           <strong>ENTRAR</strong>
         </button>
-        <div className="flex text-3xl">
-          <p className="w-full underline cursor-pointer" onClick={goToCreate}>
-            <strong>Cadastrar-se</strong>
+        <div className="flex text-lg">
+          <p className=" cursor-pointer" onClick={goToCreate}>
+           <p> <strong>Não tem conta? </strong></p>
+          </p>
+          <p className="cursor-pointer px-2" onClick={goToCreate}>
+           <p> <strong className="underline">Cadastrar-se </strong></p>
           </p>
         </div>
       </div>
